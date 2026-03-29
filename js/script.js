@@ -2,18 +2,32 @@ let endpoint = "https://api.giphy.com/v1/gifs/search?api_key=NUJPrI00Q1qmCiRl2HU
 
 let images = [];
 
-fetch(endpoint)
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(data) {
+let gifContainer = document.querySelector("#gif-container");
+let button = document.querySelector("#fetch-gif-btn");
 
-    // loop through gifs
-    for (let i = 0; i < data.data.length; i++) {
-      images.push(data.data[i].images.original.url);
-    }
+button.addEventListener("click", function() {
 
-    // proof it worked (on page, not console)
-    document.querySelector("#gif-container").innerHTML = images.length + " gifs loaded";
+// clear previous gifs
+  gifContainer.innerHTML = "";
 
-  });
+  fetch(endpoint)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+
+      images = [];
+
+// store urls
+      for (let i = 0; i < data.data.length; i++) {
+        images.push(data.data[i].images.original.url);
+      }
+
+      // display gifs
+      for (let i = 0; i < images.length; i++) {
+        gifContainer.innerHTML += `<img src="${images[i]}" class="col-3 mb-3">`;
+      }
+
+    });
+
+});
